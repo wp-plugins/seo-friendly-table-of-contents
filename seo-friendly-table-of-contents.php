@@ -29,7 +29,7 @@
 add_filter('the_content', 'seotocFilter');
 
 //add css
-wp_enqueue_style('toc_css',WP_PLUGIN_URL.'/seo-ftoc/style.css');
+wp_enqueue_style('toc_css',WP_PLUGIN_URL.'/seo-friendly-table-of-contents/style.css');
 
 
 /**
