@@ -22,5 +22,5 @@ This is some brief installation notes. For more information see [Webfish](http:/
 
 == Frequently Asked Questions ==
 
-The frequently asked questions is updated at the plugin's homepage [Growyn Search plugin](http://www.webfish.se/wp/plugins/seo-friendly-table-of-contents#FAQ "Webfish - Wordpress plugin"). 
+The frequently asked questions is updated at the plugin's homepage [Seo friendly table of contents](http://www.webfish.se/wp/plugins/seo-friendly-table-of-contents#FAQ "Webfish - Wordpress plugin"). 
 
