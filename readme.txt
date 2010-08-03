@@ -1,6 +1,7 @@
 === Seo Friendly Table of Contents ===
 Contributors: tnyholm
 Tags: toc, Post, page, content, table of contents, seo, links
+Donate link: http://www.webfish.se/wp/donate
 Requires at least: 2.8.1
 Tested up to: 3.0.1
 Stable tag: trunk
