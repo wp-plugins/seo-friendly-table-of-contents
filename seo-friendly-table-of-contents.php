@@ -3,7 +3,7 @@
  Plugin Name: Seo Friendly Table of Contents
  Plugin URI: http://www.webfish.se/wp/plugins/seo-friendly-table-of-contents
  Description: Adds a seo firendly table of contents anywhere you write [toc="2,3,4" title="Table of contents"].
- Version: 1.3.2
+ Version: 1.3.4
  Author: Tobias Nyholm
  Author URI: http://www.tnyholm.se
 
@@ -157,5 +157,40 @@ function seotoc_addIds(array $tagsArray,&$content,&$list){
 	//No need to return anyting. The $content and $list parameter is passed by reference.
 }
 
+
+
+/**
+ * This will return a table of contents. The third param ($content) is send by reference. 
+ * This function will add id attributes on the heading tag. You have to use the same content
+ * variable to display your content as the one you use to this function. 
+ * 
+ * If you are using get_the_content() to get the content for this function, then you might
+ * want to apply some filters before echoing out the content to the browser. Consider these lines:
+ * 
+ * $the_contnet = get_the_content();
+ * $the_content = apply_filters('the_content', $the_content);
+ * $the_content = str_replace(']]>', ']]&gt;', $the_content);
+ * echo getSeo_toc(array(2,3,4),"Table of contents",$the_content);
+ * echo $the_content;
+ * 
+ * @param array $tags like array(2,3,4)
+ * @param String $title
+ * @param String $content, the page content. The page content will be changed!
+ */
+function getSeo_toc(array $tags,$title, &$content){
+	if($title==""||$title==false||$title==null){
+		$title="";
+	}
+	else{
+		$title="<div id='toc_title'>$title</div>";
+	}
+	
+	$list="";
+	seotoc_addIds($tags,$content,$list);
+	if($list!="")
+		$list="<div id='toc'>$title$list</div>";
+	
+	return $list;
+}
 
 ?>
