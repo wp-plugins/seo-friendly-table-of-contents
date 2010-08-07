@@ -6,7 +6,7 @@ Requires at least: 2.8.1
 Tested up to: 3.0.1
 Stable tag: trunk
 
-A simple seo friendly table of contents plugin that does not requere editing in your themes source code.
+A simple seo friendly table of contents plugin that does not require editing in your themes source code.
 == Description ==
 This plugin puts a table of contents on your page. You just need to type `[toc="2,3" title="Table of contents"]` in the page/post editor. That's it!
 You dont need to edit your themes source code. The plugin allows you to set a title of the toc box. You can also choose which heading tags (h1,h2,h3,h4 etc)
