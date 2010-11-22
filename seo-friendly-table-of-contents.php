@@ -3,10 +3,10 @@
  Plugin Name: Seo Friendly Table of Contents
  Plugin URI: http://www.webfish.se/wp/plugins/seo-friendly-table-of-contents
  Description: Adds a seo firendly table of contents anywhere you write [toc="2,3,4" title="Table of contents"].
- Version: 1.3.4
+ Version: 1.3.6
  Author: Tobias Nyholm
  Author URI: http://www.tnyholm.se
-
+ Copyright: Tobias Nyholm 2010
 /*
     This file is part of Seo Friendly Table of Contents.
 
@@ -64,9 +64,11 @@ function seotocFilter($content){
 
 	
 		//wrapp the list into some divs and add the title if the list was not empty
-		if($list!="")
-			$list="<div id='toc'><div id='toc_title'>$toc_title</div>$list</div>";
-
+		if($list!=""){
+			global $post;
+			$list="<div id='toc' class='post-".$post->ID."'><div id='toc_title'>$toc_title</div>$list</div>";
+		}
+			
 		//replace the [toc] with the $html
 		$content = preg_replace($tolc_regex, $list, $content,1);
 	}
@@ -131,8 +133,9 @@ function seotoc_addIds(array $tagsArray,&$content,&$list){
 				$lastLevel=$thisLevel;
 			}
 			elseif($thisLevel<$lastLevel){//end a sublist
+				$list.="</li>";//end the last li on prev listlevel. 
 				for($i=$lastLevel;$i>$thisLevel;$i--)
-					$list.="</ul></li>";
+					$list.="</ul></li>"."\n";
 				$lastLevel=$thisLevel;
 			}
 			else{//end a list item
@@ -167,7 +170,7 @@ function seotoc_addIds(array $tagsArray,&$content,&$list){
  * If you are using get_the_content() to get the content for this function, then you might
  * want to apply some filters before echoing out the content to the browser. Consider these lines:
  * 
- * $the_contnet = get_the_content();
+ * $the_content = get_the_content();
  * $the_content = apply_filters('the_content', $the_content);
  * $the_content = str_replace(']]>', ']]&gt;', $the_content);
  * echo getSeo_toc(array(2,3,4),"Table of contents",$the_content);
@@ -182,7 +185,8 @@ function getSeo_toc(array $tags,$title, &$content){
 		$title="";
 	}
 	else{
-		$title="<div id='toc_title'>$title</div>";
+		global $post;
+		$title="<div id='toc_title' class='post-".$post->ID."'>$title</div>";
 	}
 	
 	$list="";
