@@ -3,7 +3,7 @@
  Plugin Name: Seo Friendly Table of Contents
  Plugin URI: http://www.webfish.se/wp/plugins/seo-friendly-table-of-contents
  Description: Adds a seo firendly table of contents anywhere you write [toc="2,3,4" title="Table of contents"].
- Version: 1.3.6
+ Version: 1.3.7
  Author: Tobias Nyholm
  Author URI: http://www.tnyholm.se
  Copyright: Tobias Nyholm 2010
@@ -29,8 +29,10 @@
 add_filter('the_content', 'seotocFilter');
 
 //add css
-wp_enqueue_style('toc_css',WP_PLUGIN_URL.'/seo-friendly-table-of-contents/style.css');
-
+add_action('wp_enqueue_scripts','seotok_addStyle');
+function seotok_addStyle(){
+	wp_enqueue_style('toc_css',WP_PLUGIN_URL.'/seo-friendly-table-of-contents/style.css');
+}
 
 /**
  * Verifies if a table of contents should be here. If so, then we add one.
