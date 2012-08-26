@@ -17,10 +17,10 @@
  */
 
 #toc{
- background-color: #f8f8ec;
+ /*background-color: #f8f8ec;*/
  border: 1px solid #f0f0f0;
  width:250px;
- margin: 0 auto 0 0;
+ margin: 0;
 }
 
 #toc_title{
