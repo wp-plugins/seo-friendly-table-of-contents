@@ -3,7 +3,7 @@
  Plugin Name: Seo Friendly Table of Contents
  Plugin URI: http://www.webfish.se/wp/plugins/seo-friendly-table-of-contents
  Description: Adds a seo firendly table of contents anywhere you write [toc levels=2 title="Table of contents"].
- Version: 2.0.0
+ Version: 2.0.1
  Author: Tobias Nyholm
  Author URI: http://www.tnyholm.se
  Copyright: Tobias Nyholm 2010
@@ -173,4 +173,111 @@ function getSeo_toc(array $tagsArray,$toc_title=null){
 	
 	
 	return $list;
+}
+
+
+
+
+//------------------------------------------------//
+// Admin stuff
+
+/**
+ * add admin menus
+ */
+function seotoc_adminMenu() {
+	$page=array();
+
+	//Add some submenus
+	//parent, title, link, rights, url, function
+	$page[]=add_submenu_page('options-general.php', 'Table of contents', 'Table of contents','manage_options','table-of-contents', 'seotoc_adminOptions');
+
+}
+add_action('admin_menu', 'seotoc_adminMenu');
+
+
+/**
+ * the admin page
+ */
+function seotoc_adminOptions(){
+	?><div id='seotoc_admin'><h1>Seo Friendly Table of Contents</h1>
+	<p>If you updated from version 1 you may want to rewrite the shortcode in you existing posts. Press the button below if you want us to rewrite
+	automatically. It is recommended that you back up your database before pressing the button.</p>
+	<?php 
+	/*
+	 * handle post
+	 */
+	if(isset($_POST["do"]) && $_POST["do"]=="update"){
+		seotoc_updateToVersion2();
+		echo "<div id='message' class='updated'><p><strong>Your existings posts are updated!</strong></p></div>";
+	}
+
+	/*
+	 * Print html
+	 */
+	?>
+	<form action="" method="POST">
+	<input type="hidden" name="do" value="update" />
+
+	<input type="submit" value="Update existing posts!" onclick="return confirm('Have you made a backup of your database? Do you wish to proceed?')" />
+	
+	</form>
+	</div><!-- end wpp_admin -->
+	<?php 
+
+}
+
+
+/*********************************************'
+ * Update to version 2
+ */
+
+
+/**
+ * This function updates all your posts
+ * Warning. Backup your DB first
+ */
+function seotoc_updateToVersion2(){
+	global $wpdb;
+	$query = "SELECT * FROM $wpdb->posts
+	WHERE $wpdb->posts.post_status = 'publish'
+	ORDER BY post_date DESC
+	";
+	
+	$results = $wpdb->get_results($query);
+	
+	foreach ( $results as $post ){
+		$newContent=$post->post_content;
+		seotoc_rewriteContentToVersion2($newContent);
+		
+		//save
+		$wpdb->update(
+				$wpdb->posts,
+				array('post_content' => $newContent),
+				array('ID' => $post->ID),
+				array('%s'),
+				array('%d')
+		);
+	}
+}
+
+function seotoc_rewriteContentToVersion2(&$content){
+	$tolc_regex = '|(?:<p>)?\[toc=(?:["'."'".'])?([1-7,]+)(?:["'."'".'])?(?: title=(?:["'."'".'])?(.*?)(?:["'."'".'])?)? ?\](?:<br \/>)?(?:<\/p>)?|s';
+	$tag_match = preg_match_all($tolc_regex, $content, $tag_matches);
+	//die ("<pre>".print_r($tag_matches,true));
+	
+	if ($tag_match){
+		foreach ($tag_matches[2] as $key => $title){
+			//original string
+			$orgStr=$tag_matches[0][$key];
+
+			$levels=substr($tag_matches[1][$key],-1)-1;
+			
+			$newString='[toc levels='.$levels.' title="'.$title.'"]';
+	
+			//replace the original heading with the one with an ID
+			$content = str_replace($orgStr, $newString, $content);
+		
+		}
+	}
+	
 }
